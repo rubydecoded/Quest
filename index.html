@@ -1,1 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quest · great minds Tech</title>
+<style>
+:root{--c:#00c6ff;--bg:#070d1a;--tx:#e8f4ff;--mu:#8aa4bd;--card:rgba(255,255,255,.07);--bd:rgba(255,255,255,.14);--sh:0 8px 32px rgba(0,0,0,.4)}
+[data-theme=light]{--bg:#eef6fc;--tx:#10243a;--mu:#53708a;--card:rgba(255,255,255,.7);--bd:rgba(0,120,180,.18);--sh:0 8px 28px rgba(0,100,160,.15)}
+*{box-sizing:border-box;margin:0}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
+.bg{position:fixed;inset:0;z-index:-1;background:linear-gradient(120deg,var(--bg),rgba(0,198,255,.25),var(--bg),rgba(0,114,255,.2));background-size:300% 300%;animation:bg 14s ease infinite}
+@keyframes bg{50%{background-position:100% 50%}}
+.wrap{max-width:680px;margin:0 auto;padding:16px 14px 28px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;animation:slide .6s both}
+.brand{display:flex;gap:10px;align-items:center}
+.logo{width:48px;height:48px;border-radius:14px;object-fit:cover;box-shadow:0 0 18px var(--c)}
+h1{font-size:1.4rem;display:flex;gap:6px;align-items:center}
+h1 svg{width:20px;height:20px;fill:var(--c)}
+header p{color:var(--mu);font-size:.85rem}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:10px;scrollbar-width:none}
+.tabs button{flex:none;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;padding:8px 14px;font:inherit;font-size:.85rem;cursor:pointer;transition:.2s;white-space:nowrap}
+.tabs button.on{background:var(--c);color:#04121f;border-color:var(--c);box-shadow:0 0 14px rgba(0,198,255,.5)}
+.panel{display:none}.panel.on{display:block}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:16px;margin-bottom:14px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--sh);animation:slide .5s both}
+@keyframes slide{from{opacity:0;transform:translateY(18px)}}
+textarea,input[type=text],select{width:100%;border-radius:14px;border:1px solid var(--bd);background:rgba(0,0,0,.18);color:var(--tx);padding:12px;font:inherit;outline:none}
+select option{color:#000}
+textarea{min-height:110px;resize:vertical}
+textarea:focus,input:focus{border-color:var(--c);box-shadow:0 0 0 3px rgba(0,198,255,.25)}
+input[type=color]{width:42px;height:36px;padding:0;border:0;background:none;flex:none}
+input[type=file]{color:var(--mu);font-size:.85rem;width:100%}
+input[type=range]{flex:1;accent-color:#00c6ff}
+.count{text-align:right;color:var(--mu);font-size:.75rem;margin:4px 0 8px}
+.label{color:var(--mu);font-size:.8rem;margin:10px 0 6px}
+.hint{color:var(--mu);font-size:.78rem;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;padding:7px 12px;font:inherit;font-size:.8rem;cursor:pointer;transition:.2s}
+.chip:hover,.chip.on{background:var(--c);color:#04121f;border-color:var(--c)}
+.btn{border:0;border-radius:14px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer;color:#04121f;background:linear-gradient(135deg,#00c6ff,#0072ff);transition:.2s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 0 20px rgba(0,198,255,.6)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.btn.ghost{background:var(--card);color:var(--tx);border:1px solid var(--bd)}
+.btn.sm{padding:9px 13px;font-size:.82rem}
+.full{width:100%;margin-top:12px}
+#theme{width:42px;height:42px;padding:0;font-size:1.1rem}
+.row{display:flex;gap:8px;margin-top:10px;align-items:center}
+.row>textarea,.row>input[type=text],.row>select{flex:1}
+.row.eq>.btn{flex:1}
+.hidden{display:none!important}
+.log{height:48vh;min-height:250px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:2px}
+.b{max-width:86%;padding:10px 13px;border-radius:16px;font-size:.92rem;line-height:1.45;animation:slide .35s both;overflow-wrap:anywhere}
+.b.user{align-self:flex-end;background:linear-gradient(135deg,#00c6ff,#0072ff);color:#04121f;border-bottom-right-radius:4px}
+.b.assistant{align-self:flex-start;background:var(--card);border:1px solid var(--bd);border-bottom-left-radius:4px}
+.b.err{border-color:#ff6b6b;color:#ff9b9b}
+.typing i{display:inline-block;width:7px;height:7px;margin:0 2px;border-radius:50%;background:var(--c);animation:dot 1s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes dot{50%{transform:translateY(-5px);opacity:.4}}
+pre{background:rgba(0,0,0,.4);color:#d8f3ff;padding:10px;border-radius:10px;overflow-x:auto;font-size:.78rem;margin:6px 0;cursor:pointer;white-space:pre}
+.ver{background:rgba(0,0,0,.15);border:1px solid var(--bd);border-radius:12px;padding:10px;margin-top:8px;font-size:.88rem;cursor:pointer;animation:slide .4s both}
+.ver b{color:var(--c);font-size:.75rem}
+.e{color:#ff9b9b;font-size:.88rem;margin-top:8px}
+.cwrap{text-align:center;margin:10px 0;background:rgba(0,0,0,.2);border-radius:14px;padding:6px}
+#cv{max-width:100%;height:auto;border-radius:10px;touch-action:none;background:repeating-conic-gradient(#8883 0 25%,#0000 0 50%) 0 0/16px 16px}
+.sw{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--mu);margin-top:8px}
+.stage{width:100%;aspect-ratio:1;border-radius:16px;background:#0b1424;object-fit:contain;display:block}
+.skel{position:relative;aspect-ratio:1;border-radius:16px;overflow:hidden;background:linear-gradient(100deg,rgba(255,255,255,.04) 30%,rgba(0,198,255,.22) 50%,rgba(255,255,255,.04) 70%);background-size:200% 100%;animation:sh 1.6s linear infinite;display:grid;place-items:center}
+@keyframes sh{to{background-position:-200% 0}}
+.orb{width:84px;height:84px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--c) 45%,#0072ff);box-shadow:0 0 40px var(--c),0 0 90px rgba(0,198,255,.6);animation:pulse 1.8s ease-in-out infinite;position:relative}
+.orb::after{content:"";position:absolute;inset:-14px;border-radius:50%;border:2px solid var(--c);animation:ring 1.8s ease-out infinite}
+@keyframes pulse{50%{transform:scale(1.12)}}
+@keyframes ring{from{opacity:.9;transform:scale(.8)}to{opacity:0;transform:scale(1.5)}}
+.sp{position:absolute;width:8px;height:8px;background:var(--c);border-radius:50%;box-shadow:0 0 10px var(--c);left:calc(10% + var(--i)*13%);top:80%;animation:fl 3s ease-in infinite;animation-delay:calc(var(--i)*.4s)}
+@keyframes fl{from{opacity:0;transform:translateY(0) scale(.5)}30%{opacity:1}to{opacity:0;transform:translateY(-220px) scale(1.2)}}
+.bar{height:8px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden;margin:14px 0 10px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#00c6ff,#0072ff);box-shadow:0 0 12px var(--c);transition:width .3s}
+.stat{display:flex;justify-content:space-between;color:var(--mu);font-size:.85rem}
+#msg{transition:opacity .3s}#msg.f{opacity:0}
+.res{position:relative}
+#img{width:100%;max-width:100%;border-radius:16px;display:block;filter:blur(24px);opacity:0;transform:scale(.92);transition:filter .9s,opacity .9s,transform .9s}
+#img.in{filter:none;opacity:1;transform:none}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.acts .btn{flex:1 1 45%}
+.note{color:var(--mu);font-size:.78rem;margin-top:8px}
+.res b{position:absolute;left:50%;top:50%;width:8px;height:8px;border-radius:50%;background:var(--c);animation:bu .9s ease-out forwards;pointer-events:none}
+@keyframes bu{to{transform:translate(var(--x),var(--y)) scale(0);opacity:0}}
+.hist{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.hist img{width:72px;height:72px;border-radius:12px;object-fit:cover;cursor:pointer;border:2px solid transparent;flex:none}
+.hist img:hover{border-color:var(--c)}
+.err p{margin-bottom:12px}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--c);color:#04121f;padding:8px 16px;border-radius:99px;font-size:.85rem;opacity:0;transition:.3s;pointer-events:none;max-width:90vw;text-align:center;z-index:9}
+#toast.show{opacity:1}
+footer{text-align:center;color:var(--mu);font-size:.8rem;margin-top:8px}
+@media(min-width:768px){.wrap{padding-top:36px}h1{font-size:1.8rem}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.sp{display:none}}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<main class="wrap">
+<header>
+  <div class="brand">
+    <img class="logo" src="https://res.cloudinary.com/dqqyvozdw/image/upload/v1795158861/gxlcw3kplbkjxvsdwsvz.jpg" alt="Quest">
+    <div>
+      <h1>Quest <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/><path d="M19 3l.9 2.1L22 6l-2.1.9L19 9l-.9-2.1L16 6l2.1-.9z"/></svg></h1>
+      <p>Your friend, artist and study buddy</p>
+    </div>
+  </div>
+  <button id="theme" class="btn ghost" aria-label="Toggle theme">◐</button>
+</header>
 
+<nav class="tabs" id="tabs">
+  <button data-t="chat" class="on">💬 Chat</button>
+  <button data-t="image">🎨 Image</button>
+  <button data-t="edit">✂️ Edit</button>
+  <button data-t="hw">📝 Homework</button>
+  <button data-t="code">💻 Code</button>
+  <button data-t="anim">🎬 Animate</button>
+  <button data-t="pdf">📄 PDF</button>
+</nav>
+
+<!-- CHAT -->
+<section class="panel on" id="p-chat"><div class="card">
+  <div class="log" id="log"></div>
+  <div class="chips" id="qchips" style="margin-top:10px"></div>
+  <div class="row"><textarea id="cin" placeholder="Talk to Quest..." style="min-height:46px;height:46px;resize:none"></textarea><button id="csend" class="btn">Send</button></div>
+  <div class="row"><button id="cclear" class="btn ghost sm">Clear chat</button></div>
+</div></section>
+
+<!-- IMAGE -->
+<section class="panel" id="p-image">
+  <div class="card">
+    <textarea id="prompt" maxlength="500" placeholder="Describe the image you imagine..."></textarea>
+    <div class="count"><span id="cnt">0</span>/500</div>
+    <p class="label">Style</p><div class="chips" id="styles"></div>
+    <p class="label">Try an example</p><div class="chips" id="examples"></div>
+    <button id="go" class="btn full">Generate</button>
+  </div>
+  <section id="loading" class="card hidden">
+    <div class="skel">
+      <span class="sp" style="--i:0"></span><span class="sp" style="--i:1"></span><span class="sp" style="--i:2"></span>
+      <span class="sp" style="--i:3"></span><span class="sp" style="--i:4"></span><span class="sp" style="--i:5"></span>
+      <div class="orb"></div>
+    </div>
+    <div class="bar"><i id="fill"></i></div>
+    <div class="stat"><span id="msg">Warming up the AI...</span><span id="sec">0s</span></div>
+  </section>
+  <section id="error" class="card err hidden"><p id="errTxt"></p><button id="retry" class="btn">Retry</button></section>
+  <section id="result" class="card hidden">
+    <div class="res" id="res"><img id="img" alt="Generated image"></div>
+    <div class="acts">
+      <button id="dl" class="btn">Download</button>
+      <button id="cpy" class="btn ghost">Copy Link</button>
+      <button id="toEdit" class="btn ghost">Edit this</button>
+      <button id="again" class="btn ghost">Generate another</button>
+    </div>
+    <p class="note">The image link is temporary, so download your image to keep it.</p>
+  </section>
+  <section id="histBox" class="card hidden"><p class="label" style="margin-top:0">Recent</p><div class="hist" id="hist"></div></section>
+</section>
+
+<!-- EDIT -->
+<section class="panel" id="p-edit"><div class="card">
+  <input type="file" id="file" accept="image/*">
+  <div class="cwrap"><canvas id="cv" width="300" height="160"></canvas></div>
+  <div class="chips" id="modes">
+    <button class="chip" data-m="draw">✏️ Draw</button><button class="chip" data-m="text">🔤 Add text</button>
+    <button class="chip" data-m="sticker">😀 Sticker</button><button class="chip" data-m="cover">🧽 Edit/remove text</button>
+  </div>
+  <p class="hint" id="hint">Pick a tool, then tap or drag on the picture.</p>
+  <div class="row"><input type="color" id="col" value="#ffffff"><input type="text" id="etxt" placeholder="Text / replacement text"></div>
+  <label class="sw">Size <input type="range" id="sz" min="4" max="80" value="24"></label>
+  <div class="chips" id="stk" style="margin-top:8px"></div>
+  <label class="sw">Brightness <input type="range" id="br" min="40" max="180" value="100"></label>
+  <label class="sw">Contrast <input type="range" id="ct" min="40" max="180" value="100"></label>
+  <div class="chips" id="flt" style="margin-top:8px"></div>
+  <div class="chips" style="margin-top:10px">
+    <button class="chip" id="rot">⟳ Rotate</button><button class="chip" id="c11">Crop 1:1</button><button class="chip" id="c43">Crop 4:3</button><button class="chip" id="c169">Crop 16:9</button>
+    <button class="chip" id="rbg">Remove plain bg</button><button class="chip" id="undo">↶ Undo</button><button class="chip" id="reset">Reset</button>
+  </div>
+  <button id="save" class="btn full">Save PNG</button>
+  <p class="label">AI tools</p>
+  <div class="row"><input type="text" id="aiq" placeholder="e.g. make it sunset, add a hat"><button id="aiedit" class="btn sm">AI edit</button></div>
+  <button id="ocrb" class="btn ghost sm" style="margin-top:8px">Read text in image</button>
+  <pre id="ocr" class="hidden"></pre>
+</div></section>
+
+<!-- HOMEWORK -->
+<section class="panel" id="p-hw"><div class="card">
+  <textarea id="hq" placeholder="Paste the question or the answer you want rewritten..."></textarea>
+  <div class="row"><select id="hn"><option>5</option><option>10</option><option>20</option><option>100</option></select><button id="hgo" class="btn">Make versions</button></div>
+  <p class="hint" id="hprog">Same answer, different words. Tap a version to copy it.</p>
+  <div id="hout"></div>
+</div></section>
+
+<!-- CODE -->
+<section class="panel" id="p-code"><div class="card">
+  <textarea id="kin" placeholder="Describe what to build, or paste code and errors..."></textarea>
+  <div class="row eq" id="kbtns">
+    <button class="btn sm" data-a="write">Write</button><button class="btn sm" data-a="explain">Explain</button>
+    <button class="btn sm" data-a="fix">Fix</button><button class="btn sm" data-a="debug">Debug</button>
+  </div>
+  <div id="kout" style="margin-top:12px;font-size:.9rem;line-height:1.5"></div>
+  <p class="hint">Tap a code block to copy it.</p>
+</div></section>
+
+<!-- ANIMATE -->
+<section class="panel" id="p-anim"><div class="card">
+  <textarea id="aq" placeholder="e.g. a boy running, a heart beating, a girl dancing" style="min-height:70px"></textarea>
+  <button id="amake" class="btn full">Create animation</button>
+  <p class="e" id="aerr"></p>
+  <div id="aout" class="hidden" style="margin-top:12px">
+    <img id="stage" class="stage" alt="Animation">
+    <div class="row eq"><button id="pp" class="btn ghost sm">⏸ Pause</button><button id="rp" class="btn ghost sm">↻ Replay</button><button id="adl" class="btn sm">Download</button></div>
+    <label class="sw">Speed <input type="range" id="spd" min="0.25" max="3" step="0.25" value="1"></label>
+  </div>
+</div></section>
+
+<!-- PDF -->
+<section class="panel" id="p-pdf"><div class="card">
+  <p class="label" style="margin-top:0">Turn your work into a PDF</p>
+  <button id="pdfChat" class="btn full">Chat → PDF</button>
+  <button id="pdfHw" class="btn full">Assignment → PDF</button>
+  <button id="pdfImg" class="btn full">Images → PDF gallery</button>
+  <p class="hint">The gallery uses your edited picture and your recent generated images.</p>
+</div></section>
+
+<footer>Powered by great minds Tech</footer>
+</main>
+<div id="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
